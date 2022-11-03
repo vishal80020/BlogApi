@@ -5,6 +5,7 @@ import com.letsgo.blog.entity.User;
 import com.letsgo.blog.exceptions.ResourceNotFoundException;
 import com.letsgo.blog.repository.UserRepository;
 import com.letsgo.blog.service.UserService;
+import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import org.springframework.stereotype.Service;
@@ -18,6 +19,9 @@ public class UserServiceImpl implements UserService {
 
     @Autowired
     private UserRepository userRepository;
+
+    @Autowired
+    private ModelMapper modelMapper;
 
     @Override
     public UserDto createUser(UserDto userDto) {
@@ -70,22 +74,22 @@ public class UserServiceImpl implements UserService {
 
 
     public User userDtoToUser(UserDto theUserDto) {
-        User theUser = new User();
-        theUser.setId(theUserDto.getId());
-        theUser.setName(theUserDto.getName());
-        theUser.setEmail(theUserDto.getEmail());
-        theUser.setPassword(theUserDto.getPassword());
-        theUser.setAbout(theUserDto.getAbout());
+        User theUser = this.modelMapper.map(theUserDto,User.class);
+//        theUser.setId(theUserDto.getId());
+//        theUser.setName(theUserDto.getName());
+//        theUser.setEmail(theUserDto.getEmail());
+//        theUser.setPassword(theUserDto.getPassword());
+//        theUser.setAbout(theUserDto.getAbout());
         return  theUser;
     }
 
     public UserDto userToUserDto(User theUser) {
-        UserDto theUserDto = new UserDto();
-        theUserDto.setId(theUser.getId());
-        theUserDto.setName(theUser.getName());
-        theUserDto.setEmail(theUser.getEmail());
-        theUserDto.setPassword(theUser.getPassword());
-        theUserDto.setAbout(theUser.getAbout());
+        UserDto theUserDto = this.modelMapper.map(theUser,UserDto.class);
+//        theUserDto.setId(theUser.getId());
+//        theUserDto.setName(theUser.getName());
+//        theUserDto.setEmail(theUser.getEmail());
+//        theUserDto.setPassword(theUser.getPassword());
+//        theUserDto.setAbout(theUser.getAbout());
         return theUserDto;
     }
 }
