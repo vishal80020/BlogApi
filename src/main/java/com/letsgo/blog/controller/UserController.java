@@ -7,6 +7,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import javax.validation.Valid;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -35,14 +36,14 @@ public class UserController {
 
     //POST - create user
     @PostMapping("/create-user")
-    public ResponseEntity<UserDto> createUser( @RequestBody UserDto theUserDto) {
+    public ResponseEntity<UserDto> createUser(@Valid @RequestBody UserDto theUserDto) {
         UserDto createdUserDto = this.userService.createUser(theUserDto);
         return new ResponseEntity<>(createdUserDto, HttpStatus.CREATED);
     }
 
     //PUT - update user
     @PutMapping("/update-user/{theUserId}")
-    public ResponseEntity<UserDto> updateUser(@RequestBody UserDto theUserDto, @PathVariable int theUserId) {
+    public ResponseEntity<UserDto> updateUser(@Valid @RequestBody UserDto theUserDto, @PathVariable int theUserId) {
         UserDto updatedUserDto = this.userService.updateUser(theUserDto,theUserId);
         return new ResponseEntity(updatedUserDto,HttpStatus.OK);
     }
