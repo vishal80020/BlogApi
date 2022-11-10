@@ -1,16 +1,14 @@
 package com.letsgo.blog.controller;
 
+import com.letsgo.blog.dto.ApiResponse;
 import com.letsgo.blog.dto.UserDto;
 import com.letsgo.blog.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-
 import javax.validation.Valid;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 @RestController
 @RequestMapping("/api/users")
@@ -30,8 +28,8 @@ public class UserController {
     //GET  - get user
     @GetMapping("/{theUserId}")
     public ResponseEntity<UserDto> getUserById(@PathVariable int theUserId) {
-        UserDto userDtoList = this.userService.getUserById(theUserId);
-        return new ResponseEntity<>(userDtoList, HttpStatus.OK);
+        UserDto userDto = this.userService.getUserById(theUserId);
+        return new ResponseEntity<>(userDto, HttpStatus.OK);
     }
 
     //POST - create user
@@ -50,11 +48,9 @@ public class UserController {
 
     //DELETE - delete user
     @DeleteMapping("delete-user/{theUserId}")
-    public ResponseEntity<Map<String,String>> deleteUser(@RequestBody UserDto theUserDto, @PathVariable int theUserId) {
+    public ResponseEntity<ApiResponse> deleteUser(@RequestBody UserDto theUserDto, @PathVariable int theUserId) {
         this.userService.deleteUser(theUserId);
-        Map<String,String> messageMap = new HashMap<>();
-        messageMap.put("message","User deleted successfully");
-        return new ResponseEntity(messageMap,HttpStatus.OK);
+        return new ResponseEntity(new ApiResponse("User deleted successfully", true),HttpStatus.OK);
     }
 
 
