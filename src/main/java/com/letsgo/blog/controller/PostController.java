@@ -1,5 +1,6 @@
 package com.letsgo.blog.controller;
 
+import com.letsgo.blog.dto.ApiResponse;
 import com.letsgo.blog.dto.PostDto;
 import com.letsgo.blog.service.PostService;
 import javafx.geometry.Pos;
@@ -54,6 +55,21 @@ public class PostController {
     public  ResponseEntity<PostDto> getPostById(@PathVariable int thePostId) {
         PostDto postDto = this.postService.getPostById(thePostId);
         return new ResponseEntity<>(postDto,HttpStatus.OK);
+    }
+
+    //Update Post
+    @PutMapping("update-post/{thePostId}")
+    public ResponseEntity<PostDto> updatePost(@RequestBody PostDto postDto,
+                                              @PathVariable int thePostId) {
+        PostDto updatedPostDto = this.postService.updatePost(postDto,thePostId);
+        return new ResponseEntity<>(updatedPostDto,HttpStatus.OK);
+    }
+
+    //Delete Post
+    @DeleteMapping("delete-post/{thePostId}")
+    public ResponseEntity<ApiResponse> deletePost(@PathVariable int thePostId) {
+        this.postService.deletePost(thePostId);
+        return new ResponseEntity<>(new ApiResponse("Post is deleted successfully",true),HttpStatus.OK);
     }
 
 }
