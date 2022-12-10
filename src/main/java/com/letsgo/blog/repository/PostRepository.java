@@ -10,9 +10,9 @@ import java.util.List;
 public interface PostRepository extends JpaRepository<Post, Integer> {
 
     // select user from Post where user_id = id;
-    List<User> findByUser(User user);
+    List<Post> findByUser(User user);
 
     // select category from Post where category_id = id;
-    List<Category> findAllByCategory(Category category);
+    List<Post> findByCategory(Category category);
 
 }

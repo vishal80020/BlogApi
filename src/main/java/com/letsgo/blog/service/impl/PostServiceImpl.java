@@ -13,6 +13,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import java.util.Date;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
 public class PostServiceImpl implements PostService {
@@ -59,22 +60,40 @@ public class PostServiceImpl implements PostService {
 
     @Override
     public PostDto getPostById(int thePostId) {
-        return null;
+        Post post = this.postRepository.findById(thePostId)
+                .orElseThrow(()-> new ResourceNotFoundException("Post","Post Id",thePostId));
+        PostDto postDto = this.modelMapper.map(post,PostDto.class);
+        return postDto;
     }
 
     @Override
     public List<PostDto> getAllPost() {
-        return null;
+
+        List<Post> postList = this.postRepository.findAll();
+        List<PostDto> postDtoList =postList.stream().map((post) -> this.modelMapper.map(post,PostDto.class))
+                                    .collect(Collectors.toList());
+        return postDtoList;
     }
 
     @Override
     public List<PostDto> getPostsByCategory(int theCategoryId) {
-        return null;
+        Category theCategory = this.categoryRepository.findById(theCategoryId)
+                .orElseThrow(()-> new ResourceNotFoundException("Category","Category Id",theCategoryId));
+        List<Post> postList = this.postRepository.findByCategory(theCategory);
+        List<PostDto>  postDtoList = postList.stream().map((post) -> this.modelMapper.map(post,PostDto.class))
+                                    .collect(Collectors.toList());
+        return postDtoList;
     }
 
     @Override
     public List<PostDto> getPostsByUser(int theUserId) {
-        return null;
+        User theUser = this.userRepository.findById(theUserId)
+                .orElseThrow(() -> new ResourceNotFoundException("User","User Id",theUserId));
+
+        List<Post> postList = this.postRepository.findByUser(theUser);
+        List<PostDto> postDtoList = postList.stream().map((post )-> this.modelMapper.map(post,PostDto.class))
+                                    .collect(Collectors.toList());
+        return postDtoList;
     }
 
     @Override

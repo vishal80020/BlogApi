@@ -26,5 +26,5 @@ public class PostDto {
     private UserDto user;
 
     private CategoryDto category;
-    
+
 }
