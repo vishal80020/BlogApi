@@ -2,6 +2,7 @@ package com.letsgo.blog.controller;
 
 import com.letsgo.blog.dto.ApiResponse;
 import com.letsgo.blog.dto.PostDto;
+import com.letsgo.blog.dto.PostResponse;
 import com.letsgo.blog.service.PostService;
 import javafx.geometry.Pos;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -45,9 +46,11 @@ public class PostController {
 
     //Get All Post
     @GetMapping("")
-    public  ResponseEntity<List<PostDto>> getAllPost() {
-        List<PostDto> postDtoList = this.postService.getAllPost();
-        return new ResponseEntity<>(postDtoList,HttpStatus.OK);
+    public  ResponseEntity<PostResponse> getAllPost(
+            @RequestParam (value="pageNumber",defaultValue = "0",required = false) int pageNumber,
+            @RequestParam (value = "pageSize",defaultValue = "10",required = false) int pageSize) {
+        PostResponse postResponse = this.postService.getAllPost(pageNumber,pageSize);
+        return new ResponseEntity<>(postResponse,HttpStatus.OK);
     }
 
     //Get Post By Id
