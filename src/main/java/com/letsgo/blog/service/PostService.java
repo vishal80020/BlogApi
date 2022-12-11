@@ -32,7 +32,7 @@ public interface PostService {
     List<PostDto> getPostsByUser(int theUserId);
 
     // Search Post By a Keyword
-    List<PostDto> searchPost(String theKeyword);
+    List<PostDto> searchPostByTitle(String theKeyword);
 
 
 
