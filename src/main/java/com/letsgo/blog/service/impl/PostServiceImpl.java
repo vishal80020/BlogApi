@@ -1,5 +1,6 @@
 package com.letsgo.blog.service.impl;
 import com.letsgo.blog.dto.PostDto;
+import com.letsgo.blog.dto.PostResponse;
 import com.letsgo.blog.entity.Category;
 import com.letsgo.blog.entity.Post;
 import com.letsgo.blog.entity.User;
@@ -10,6 +11,10 @@ import com.letsgo.blog.repository.UserRepository;
 import com.letsgo.blog.service.PostService;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import java.util.Date;
 import java.util.List;
@@ -74,12 +79,28 @@ public class PostServiceImpl implements PostService {
     }
 
     @Override
-    public List<PostDto> getAllPost() {
+    public PostResponse getAllPost(int pageNumber, int pageSize,String sortBy,String sortDir) {
 
-        List<Post> postList = this.postRepository.findAll();
-        List<PostDto> postDtoList =postList.stream().map((post) -> this.modelMapper.map(post,PostDto.class))
+        Sort sort = null;
+        if("asc".equalsIgnoreCase(sortDir)) {
+            sort = Sort.by(sortBy).ascending();
+        } else {
+            sort = Sort.by(sortBy).descending();
+        }
+        Pageable page = PageRequest.of(pageNumber,pageSize, sort);
+        Page<Post> pageOfPost = this.postRepository.findAll(page);
+
+        List<Post> postList = pageOfPost.getContent();
+        List<PostDto> postDtoList = postList.stream().map((post) -> this.modelMapper.map(post,PostDto.class))
                                     .collect(Collectors.toList());
-        return postDtoList;
+        PostResponse postResponse = new PostResponse();
+        postResponse.setPostDtoList(postDtoList);
+        postResponse.setPageNumber(pageOfPost.getNumber());
+        postResponse.setPageSize(pageOfPost.getSize());
+        postResponse.setTotalElements(pageOfPost.getTotalElements());
+        postResponse.setTotalPages(pageOfPost.getTotalPages());
+        postResponse.setLastPage(pageOfPost.isLast());
+        return postResponse;
     }
 
     @Override
@@ -104,7 +125,10 @@ public class PostServiceImpl implements PostService {
     }
 
     @Override
-    public List<PostDto> searchPost(String theKeyword) {
-        return null;
+    public List<PostDto> searchPostByTitle(String theKeyword) {
+        List<Post> thePostList = this.postRepository.findByTitleContaining(theKeyword);
+        List<PostDto> postDtoList = thePostList.stream().map((post)-> this.modelMapper.map(post,PostDto.class))
+                                    .collect(Collectors.toList());
+        return postDtoList;
     }
 }

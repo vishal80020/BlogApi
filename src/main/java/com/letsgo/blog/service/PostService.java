@@ -2,6 +2,7 @@ package com.letsgo.blog.service;
 
 
 import com.letsgo.blog.dto.PostDto;
+import com.letsgo.blog.dto.PostResponse;
 import com.letsgo.blog.entity.Post;
 import javafx.geometry.Pos;
 
@@ -22,7 +23,7 @@ public interface PostService {
     PostDto getPostById(int thePostId);
 
     //Get All Post
-    List<PostDto> getAllPost();
+    PostResponse getAllPost(int pageNumber, int pageSize,String sortBy,String sortDir);
 
     //Get All Posts By Category
     List<PostDto> getPostsByCategory(int theCategoryId);
@@ -31,7 +32,7 @@ public interface PostService {
     List<PostDto> getPostsByUser(int theUserId);
 
     // Search Post By a Keyword
-    List<PostDto> searchPost(String theKeyword);
+    List<PostDto> searchPostByTitle(String theKeyword);
 
 
 

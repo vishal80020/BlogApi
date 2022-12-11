@@ -2,6 +2,7 @@ package com.letsgo.blog.controller;
 
 import com.letsgo.blog.dto.ApiResponse;
 import com.letsgo.blog.dto.PostDto;
+import com.letsgo.blog.dto.PostResponse;
 import com.letsgo.blog.service.PostService;
 import javafx.geometry.Pos;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -45,9 +46,13 @@ public class PostController {
 
     //Get All Post
     @GetMapping("")
-    public  ResponseEntity<List<PostDto>> getAllPost() {
-        List<PostDto> postDtoList = this.postService.getAllPost();
-        return new ResponseEntity<>(postDtoList,HttpStatus.OK);
+    public  ResponseEntity<PostResponse> getAllPost(
+            @RequestParam (value="pageNumber",defaultValue = "0",required = false) int pageNumber,
+            @RequestParam (value = "pageSize",defaultValue = "10",required = false) int pageSize,
+            @RequestParam (value = "sortBy", defaultValue = "postId",required = false) String sortBy,
+            @RequestParam (value = "sortDir", defaultValue = "asc",required = false) String sortDir) {
+        PostResponse postResponse = this.postService.getAllPost(pageNumber,pageSize,sortBy,sortDir);
+        return new ResponseEntity<>(postResponse,HttpStatus.OK);
     }
 
     //Get Post By Id
@@ -71,5 +76,14 @@ public class PostController {
         this.postService.deletePost(thePostId);
         return new ResponseEntity<>(new ApiResponse("Post is deleted successfully",true),HttpStatus.OK);
     }
+
+    //Search
+    @GetMapping("/search/{theKeyword}")
+    public ResponseEntity<List<PostDto>> searchPostByTitle(@PathVariable String theKeyword) {
+        List<PostDto> postDtoList = this.postService.searchPostByTitle(theKeyword);
+        return  new ResponseEntity<>(postDtoList,HttpStatus.OK);
+    }
+
+
 
 }
