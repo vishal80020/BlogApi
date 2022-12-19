@@ -1,12 +1,12 @@
 package com.letsgo.blog.dto;
 
-import com.letsgo.blog.entity.Category;
-import com.letsgo.blog.entity.User;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import java.util.Date;
+import java.util.HashSet;
+import java.util.Set;
 
 @Getter
 @Setter
@@ -26,5 +26,7 @@ public class PostDto {
     private UserDto user;
 
     private CategoryDto category;
+
+    private Set<CommentDto> comments = new HashSet<>();
 
 }

@@ -3,10 +3,11 @@ package com.letsgo.blog.entity;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
-import org.hibernate.annotations.GeneratorType;
 
 import javax.persistence.*;
 import java.util.Date;
+import java.util.HashSet;
+import java.util.Set;
 
 @Entity
 @Table(name= "posts")
@@ -41,6 +42,8 @@ public class Post {
     private User user;  //which user has created this post
 
 
+    @OneToMany(mappedBy = "post", cascade = CascadeType.ALL)  // mappedBy se foreign key Post table mn bane
+    private Set<Comment> comments = new HashSet<>();
 
 
 }
