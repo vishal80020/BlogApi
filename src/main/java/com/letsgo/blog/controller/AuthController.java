@@ -2,8 +2,10 @@ package com.letsgo.blog.controller;
 
 import com.letsgo.blog.dto.JwtAuthRequest;
 import com.letsgo.blog.dto.JwtAuthResponse;
+import com.letsgo.blog.dto.UserDto;
 import com.letsgo.blog.exceptions.InvalidUserNamePassword;
 import com.letsgo.blog.security.JwtTokenHelper;
+import com.letsgo.blog.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -30,6 +32,9 @@ public class AuthController {
 
     @Autowired
     private AuthenticationManager authenticationManager;
+
+    @Autowired
+    private UserService userService;
 
     @PostMapping("/login")
     public ResponseEntity<JwtAuthResponse> createToken(
@@ -60,5 +65,16 @@ public class AuthController {
         }
 
     }
+
+
+    //register new user
+    @PostMapping("/register")
+    public ResponseEntity<UserDto> registerUser(@RequestBody UserDto userDto) {
+
+        UserDto registeredUserDto = this.userService.registerNewUser(userDto);
+        return new ResponseEntity<>(registeredUserDto, HttpStatus.CREATED);
+
+    }
+
 
 }
