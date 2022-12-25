@@ -30,4 +30,13 @@ public class GlobalExceptionHandler {
         });
         return new ResponseEntity<Map<String,String>>(resp,HttpStatus.BAD_REQUEST);
     }
+
+    @ExceptionHandler(InvalidUserNamePassword.class)
+    public ResponseEntity<String> handleInvalidUserNamePassword(InvalidUserNamePassword ex) {
+        String message = ex.getMessage();
+        System.out.println("Exceptio wala message " +message);
+        return new ResponseEntity<>(message,HttpStatus.FORBIDDEN);
+    }
+
+
 }

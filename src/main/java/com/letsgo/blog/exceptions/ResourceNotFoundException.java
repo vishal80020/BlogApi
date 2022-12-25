@@ -1,5 +1,6 @@
 package com.letsgo.blog.exceptions;
 
+
 public class ResourceNotFoundException extends RuntimeException {
 
     private String resourceName;
