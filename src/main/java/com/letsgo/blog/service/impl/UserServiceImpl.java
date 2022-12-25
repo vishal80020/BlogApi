@@ -1,18 +1,20 @@
 package com.letsgo.blog.service.impl;
 
+import com.letsgo.blog.config.AppConstants;
 import com.letsgo.blog.dto.UserDto;
+import com.letsgo.blog.entity.Role;
 import com.letsgo.blog.entity.User;
 import com.letsgo.blog.exceptions.ResourceNotFoundException;
+import com.letsgo.blog.repository.RoleRepository;
 import com.letsgo.blog.repository.UserRepository;
 import com.letsgo.blog.service.UserService;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
-
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
 import java.util.stream.Collectors;
-import java.util.stream.Stream;
 
 @Service // spring will pick it up during component scanning
 public class UserServiceImpl implements UserService {
@@ -22,6 +24,13 @@ public class UserServiceImpl implements UserService {
 
     @Autowired
     private ModelMapper modelMapper;
+
+    @Autowired
+    private PasswordEncoder passwordEncoder;
+
+    @Autowired
+    private RoleRepository roleRepository;
+
 
     @Override
     public UserDto createUser(UserDto userDto) {
@@ -92,4 +101,22 @@ public class UserServiceImpl implements UserService {
 //        theUserDto.setAbout(theUser.getAbout());
         return theUserDto;
     }
+
+    @Override
+    public UserDto registerNewUser(UserDto userDto) {
+        User user = this.modelMapper.map(userDto,User.class);
+        //encoded the password
+        user.setPassword(this.passwordEncoder.encode(user.getPassword()));
+
+        //role
+        Role role = this.roleRepository.findById(AppConstants.NORMAL_USER_ROLE_ID).get();
+        user.getRoles().add(role);
+
+        User registeredUser = this.userRepository.save(user);
+        return this.modelMapper.map(registeredUser,UserDto.class);
+    }
+
+
+
+
 }
