@@ -30,4 +30,14 @@ public class GlobalExceptionHandler {
         });
         return new ResponseEntity<Map<String,String>>(resp,HttpStatus.BAD_REQUEST);
     }
+
+    @ExceptionHandler(InvalidUserNamePassword.class)
+    public ResponseEntity<ApiResponse> handleInvalidUserNamePassword(InvalidUserNamePassword ex) {
+        String message = ex.getMessage();
+        System.out.println("Exception wala message " +message);
+        ApiResponse apiResponse = new ApiResponse(message,false);
+        return new ResponseEntity<ApiResponse>(apiResponse,HttpStatus.BAD_REQUEST);
+    }
+
+
 }
